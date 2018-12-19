@@ -5,6 +5,7 @@ import time
 def save_imageUrl(folder,url):
     f = open(folder+'.json',mode='a')
     f.write(',\n'+url)
+    f.close()
     return
 
 def download(folder,url):
