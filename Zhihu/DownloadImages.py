@@ -1,6 +1,12 @@
 import os
 import re
 import requests
+import time
+def save_imageUrl(folder,url):
+    f = open(folder+'.json',mode='a')
+    f.write(',\n'+url)
+    return
+
 def download(folder,url):
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -38,7 +44,7 @@ def fetch_all_answers(url):
     session = init(url)
     q_id = url.split('/')[-1]
     offset = 0
-    limit=1
+    limit=20
     answers=[]
     is_end=False
     while not is_end:
@@ -49,7 +55,7 @@ def fetch_all_answers(url):
         print("Offset: ",offset)
         print("is_end: ",is_end)
         offset+=limit
-        is_end= True
+        time.sleep(1)
     return answers
 
 def grep_image_urls(text):
@@ -64,7 +70,8 @@ def grep_image_urls(text):
     imgs+=png.findall(text)
     imgs = list(set(imgs))
     return imgs
-questions = ['20399991', '29814297','22212644','31983868']
+    
+questions = ['31983868','20399991', '29814297','22212644']
 for question in questions:
     url =  'https://www.zhihu.com/question/' + question
     answers=fetch_all_answers(url)
@@ -74,4 +81,5 @@ for question in questions:
        folder = ans['question']['title']
        imgs = grep_image_urls(ans['content'])
        for url in imgs:
-         download(folder,url)
+         # download(folder,url)
+         save_imageUrl(folder,url)
